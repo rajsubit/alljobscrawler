@@ -82,7 +82,7 @@ class MySQLPipeline(object):
         self.dbpool = dbpool
 
     @classmethod
-    def from_settings(cls):
+    def from_settings(cls, settings):
         """ Connect to local mysql database """
 
         dbargs = dict(
