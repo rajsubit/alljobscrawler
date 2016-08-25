@@ -9,3 +9,7 @@
 class AlljobsscraperPipeline(object):
     def process_item(self, item, spider):
         return item
+
+
+class MySQLPipeline(object):
+    pass
