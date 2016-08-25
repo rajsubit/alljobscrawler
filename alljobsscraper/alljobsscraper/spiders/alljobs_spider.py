@@ -46,12 +46,10 @@ class AllJobsSpider(scrapy.Spider):
             "//div[@class='T13 MT5']//div[@class='jobs-paging-nactive']")
 
         for pagi_link in pagi_link_list:
-            nextpagi_text = pagi_link.xpath("./a/text()").extract_first()
-            if nextpagi_text == u'\u05d4\u05d1\u05d0 \xbb':
-                yield scrapy.Request(
-                    response.urljoin(
-                        pagi_link.xpath("./a/@href").extract_first()),
-                    self.parse, dont_filter=True)
+            yield scrapy.Request(
+                response.urljoin(
+                    pagi_link.xpath("./a/@href").extract_first()),
+                self.parse, dont_filter=True)
 
     def parse_each_job(self, response):
         """ Parse Each job and extract the data points"""
