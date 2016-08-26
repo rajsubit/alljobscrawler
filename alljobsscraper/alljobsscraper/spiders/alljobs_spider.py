@@ -26,6 +26,22 @@ class AllJobsSpider(scrapy.Spider):
     def parse(self, response):
         """ Parse Each location Link and Extract Each job in this location"""
 
+        total_pages_sel = response.xpath(
+            '//div[@class="jobs-paging-tp"]/text()').extract_first()
+
+        try:
+            total_pages = int(re.findall(r'[\d]+', total_pages_sel)[0])
+        except:
+            total_pages = 2000
+
+        for i in range(total_pages):
+            page_link = "http://www.alljobs.co.il/SearchResultsGuest.aspx?page=%s&position=&type=&freetxt=&city=&region=" % str(i + 1)
+            yield scrapy.Request(
+                page_link, self.parse_each_page,
+                dont_filter=True)
+
+    def parse_each_page(self, response):
+
         container_id_list = response.xpath(
             "//div[@class='open-board']/@id").extract()
 
@@ -41,15 +57,6 @@ class AllJobsSpider(scrapy.Spider):
                     job_link, self.parse_each_job,
                     dont_filter=True,
                     meta={'job_id': job_id})
-
-        pagi_link_list = response.xpath(
-            "//div[@class='T13 MT5']//div[@class='jobs-paging-nactive']")
-
-        for pagi_link in pagi_link_list:
-            yield scrapy.Request(
-                response.urljoin(
-                    pagi_link.xpath("./a/@href").extract_first()),
-                self.parse, dont_filter=True)
 
     def parse_each_job(self, response):
         """ Parse Each job and extract the data points"""

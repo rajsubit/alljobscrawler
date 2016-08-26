@@ -46,11 +46,11 @@ class AlljobsscraperPipeline(object):
         Remove the unsorted excel file
         """
 
-        unsorted_xls_df = pd.read_excel('unsorted_allJobsList.xls')
+        unsorted_xls_df = pd.read_excel('unsorted_allJobsList_new.xls')
         sorted_xls = unsorted_xls_df.sort_values(by='Company')
         sorted_xls.to_excel(
             'AllJobsJobsList.xls', sheet_name='AllJobs', index=False)
-        os.remove('unsorted_allJobsList.xls')
+        os.remove('unsorted_allJobsList_new.xls')
 
     def process_item(self, item, spider):
         """ Add each scraped contents in respective columns. """
@@ -69,7 +69,7 @@ class AlljobsscraperPipeline(object):
         self.sheet.write(
             self.last_row, 10, item['alljobs']['AllJobs_Job_class'])
 
-        self.book.save('unsorted_allJobsList.xls')
+        self.book.save('unsorted_allJobsList_new.xls')
 
         return item
 
